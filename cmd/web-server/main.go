@@ -3,35 +3,29 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
+	"google.golang.org/grpc"
 	"log"
 	"net/http"
-
-	"google.golang.org/grpc"
 
 	pb "simple-go-application/internal/grpc" // import the generated code
 )
 
 func main() {
-	http.HandleFunc("/", getRoot)
+	http.HandleFunc("/", getGreeting)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
 }
 
-func getRoot(w http.ResponseWriter, r *http.Request) {
+func getGreeting(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("got / request\n")
-	greeting := getGreeting()
-	io.WriteString(w, greeting)
-}
 
-func getGreeting() string {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		http.Error(w, fmt.Sprintf("did not connect: %v", err), http.StatusInternalServerError)
+		return
 	}
 	defer conn.Close()
 
@@ -44,5 +38,5 @@ func getGreeting() string {
 		log.Fatalf("could not greet: %v", err)
 	}
 
-	return res.GetMessage()
+	fmt.Fprintf(w, res.GetMessage())
 }
