@@ -15,8 +15,6 @@ import (
 type server struct{}
 
 func (s *server) Greet(ctx context.Context, req *pb.GreetRequest) (*pb.GreetResponse, error) {
-	//name := req.GetName()
-	//msg := fmt.Sprintf("Hello, %s!", name)
 	msg := os.Getenv("CONTENT")
 	return &pb.GreetResponse{Message: msg}, nil
 }

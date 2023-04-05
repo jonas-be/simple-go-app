@@ -1,0 +1,8 @@
+FROM golang:1-alpine
+
+WORKDIR /app
+COPY . .
+
+RUN go build -o simple-go-app-backend cmd/grpc-server/main.go
+
+CMD ["./simple-go-app-backend"]
