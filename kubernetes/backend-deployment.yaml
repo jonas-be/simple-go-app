@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: simple-go-app
+  name: simple-go-app-backend-deployment
+  labels:
+    app: simple-go-app-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: simple-go-app-backend
+  template:
+    metadata:
+      labels:
+        app: simple-go-app-backend
+    spec:
+      containers:
+        - name: simple-go-app-backend
+          image: jonasbe25/simple-go-app-backend:latest
+          ports:
+            - containerPort: 50051
+          env:
+            - name: CONTENT
+              valueFrom: { fieldRef: { fieldPath: metadata.name } }

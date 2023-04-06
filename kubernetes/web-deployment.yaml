@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: simple-go-app
+  name: simple-go-app-web-deployment
+  labels:
+    app: simple-go-app-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-go-app-web
+  template:
+    metadata:
+      labels:
+        app: simple-go-app-web
+    spec:
+      containers:
+        - name: simple-go-app-web
+          image: jonasbe25/simple-go-app-web:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TARGET
+              value: localhost:50051
