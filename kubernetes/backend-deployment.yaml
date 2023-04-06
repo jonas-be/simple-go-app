@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: simple-go-app
-  name: simple-go-app-backend-deployment
+  name: simple-go-app-backend
   labels:
     app: simple-go-app-backend
 spec:
@@ -23,3 +23,16 @@ spec:
           env:
             - name: CONTENT
               valueFrom: { fieldRef: { fieldPath: metadata.name } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: simple-go-app
+  name: simple-go-app-backend-service
+spec:
+  selector:
+    app: simple-go-app-backend
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051
